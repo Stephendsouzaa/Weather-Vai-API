@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>Weather</title>
+  <link rel="stylesheet" type="text/css" href="60.css"> 
+  <style>
+    #weather {
+  background-color: #3498db; /* Blue background color */
+  color: #fff; /* White text color */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+
+}
+
+/* Title and refresh button */
+#weather h3 {
+  font-size: 24px;
+}
+
+#refresh-button {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  margin-left: 10px; /* Add some spacing between button and title */
+}
+
+#refresh-button:hover {
+  transform: rotate(180deg);
+}
+
+/* Weather content */
+#weather-content {
+  margin-top: 20px;
+}
+
+/* Weather information paragraphs */
+#weather-content p {
+  font-size: 18px;
+font-size: black;
+  margin: 10px 0;
+  padding: 10px; /* Increase padding for a card-like appearance */
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle card-like shadow */
+}
+
+/* Weather description and emoji */
+#weather-content p:first-child {
+  font-size: 20px;
+}
+
+/* Add a border between paragraphs for separation */
+#weather-content p:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Sunrise and sunset times */
+#weather-content p:nth-last-child(2),
+#weather-content p:last-child {
+  font-size: 16px;
+  margin-top: 15px; /* Increase spacing between sunrise/sunset and other info */
+}
+
+/* Adjust spacing for smaller screens */
+@media (max-width: 768px) {
+  #refresh-button {
+    margin-top: 10px;
+  }
+}
+/* Weather section styling */
+/* Weather section styling */
+#weather {
+  background-color: royalblue; /* Blue background color by default */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 2s ease-in-out; /* Transition background color over 2 seconds */
+}
+
+/* Keyframes for text color animation without "mist" */
+@keyframes textColorChange {
+  0% {
+    color: white; /* Initial color (white) */
+  }
+  20% {
+    color: yellow; /* Color at 20% (e.g., yellow) */
+  }
+  40% {
+    color: red; /* Color at 40% (e.g., red) */
+  }
+  60% {
+    color: green; /* Color at 60% (e.g., green) */
+  }
+  80% {
+    color: blue; /* Color at 80% (e.g., blue) */
+  }
+  100% {
+    color: white; /* Final color (white) */
+  }
+}
+
+/* Apply the animation to specific elements */
+#weather-content p {
+  animation: textColorChange 4s infinite alternate; /* Apply the animation */
+}
+
+/* Rest of your CSS styles... */
+h31 {
+  color: #3498db;
+background-color: white;
+  font-size: 20px; /* Slightly larger font size */
+  margin: 30px 10px;
+  text-transform: uppercase;
+  background-color: white(522, 152, 219, 0.2); /* Adjusted RGB values */
+  padding: 10px 30px; /* Increased padding for more spacing */
+  border-radius: 5px; /* Slightly larger border radius */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+  backdrop-filter: blu(8px); /* Reduced blur value for readability */
+  -webkit-backdrop-filter: blur(8px);
+}
+
+  </style>
+</head>
+</head>
+<body>
+ 
+ 
+
+ <section id="weather">
+        <h31>Weather <button id="refresh-button">⟳</button></h31>
+        <div id="weather-content">
+            <p><strong>Loading weather information...</strong></p>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const refreshButton = document.getElementById("refresh-button");
+          refreshButton.addEventListener("click", fetchWeather);
+
+          function fetchWeather() {
+            const apiKey = 'a7b1de59546940acd36d369758fd46d5';
+            const location = 'New Delhi,IN'; // India (New Delhi)
+            const weatherContent = document.getElementById("weather-content");
+            const weatherSection = document.getElementById("weather");
+            refreshButton.disabled = true;
+
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`)
+              .then(response => response.json())
+              .then(data => {
+                const weatherDescription = data.weather[0].description;
+                const temperature = data.main.temp;
+                const humidity = data.main.humidity;
+                const windSpeed = data.wind.speed;
+                const pressure = data.main.pressure;
+                const visibility = data.visibility;
+                const sunriseTimestamp = data.sys.sunrise * 1000; // Convert to milliseconds
+                const sunsetTimestamp = data.sys.sunset * 1000; 
+                const emojiMap = {
+                  'clear': '☀️', // Sunny
+                  'clouds': '☁️', // Cloudy
+                  'rain': '🌧️',  // Rainy
+                  'thunderstorm': '⛈️',  // Thunderstorm
+                  'snow': '❄️',  // Snowy
+                  'mist': '🌫️', // Misty
+                  'fog': '🌁', // Foggy
+                  'haze': '🌫️', // Hazy
+                  'dust': '🌬️', // Dusty
+                  'smoke': '🌫️', // Smoky
+                  'drizzle': '🌧️', // Drizzle
+                  'sleet': '🌨️', // Sleet
+                };
+
+
+                const emoji = emojiMap[weatherDescription.toLowerCase()] || '';
+                const textColor = weatherDescription.toLowerCase() === 'clear' ? 'black' : 'white'; 
+
+                weatherContent.innerHTML = `
+                  <p><strong>Weather:</strong><span style="color: ${textColor};"> ${weatherDescription} ${emoji}</p>
+                  <p><strong>Temperature:</strong> <span style="color: ${textColor};">${temperature}°C</span></p>
+                  <p><strong>Humidity:</strong> <span style="color: ${textColor};">${humidity}%</span></p>
+                  <p><strong>Wind Speed:</strong> <span style="color: ${textColor};">${windSpeed} m/s</span></p>
+                  <p><strong>Pressure:</strong> <span style="color: ${textColor};">${pressure} hPa</span></p>
+                  <p><strong>Visibility:</strong> <span style="color: ${textColor};">${visibility} meters</span></p>
+                  <p><strong>Sunrise:</strong> <span style="color: ${textColor};">${new Date(sunriseTimestamp).toLocaleTimeString()}</span></p>
+                  <p><strong>Sunset:</strong> <span style="color: ${textColor};">${new Date(sunsetTimestamp).toLocaleTimeString()}</span></p>
+                `;
+
+
+                setTimeout(function () {
+                  weatherSection.style.transition = 'background-color 2s ease-in-out';
+                  weatherSection.style.backgroundColor = 'black'; 
+
+                  refreshButton.disabled = false;
+                }, 2000);
+              })
+              .catch(error => {
+                console.error('Error fetching weather data:', error);
+                weatherContent.innerHTML = '<p><strong>Error fetching weather data</strong></p>';
+                refreshButton.disabled = false;
+              });
+          }
+
+          // Initial weather fetch on page load
+          fetchWeather();
+        });
+    </script>
+</script>
+</body>
+</html>
